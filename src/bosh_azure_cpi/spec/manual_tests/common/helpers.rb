@@ -3,6 +3,7 @@
 
 require 'irb'
 require 'irb/completion'
+require 'logger'
 require 'ostruct'
 require 'optparse'
 require 'psych'
