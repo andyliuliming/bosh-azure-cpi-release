@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-load 'helpers.rb'
+load '../common/helpers.rb'
 
 # --------------------------------- test ------------------------------------#
 # 1. migrate: unmanaged v24 -> unmanaged vNext
