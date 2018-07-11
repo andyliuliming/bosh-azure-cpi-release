@@ -52,6 +52,11 @@ def load_bosh_azure_cpi(cpi_dir, config)
   cpi
 end
 
+def get_built_in_cpi(cpi_dir)
+  config = @base_config.clone
+  load_bosh_azure_cpi(cpi_dir, config)
+end
+
 # return instance of cpi
 def get_cpi(repo, branch, managed, force_renew: false)
   cpi_dir = checkout_repo(repo, branch: branch, force_renew: force_renew)

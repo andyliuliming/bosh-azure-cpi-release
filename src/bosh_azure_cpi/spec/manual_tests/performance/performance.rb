@@ -3,7 +3,8 @@
 
 load '../common/helpers.rb'
 
-cpi = get_cpi(@upstream_repo, 'v35.3', false)
+cpi = get_built_in_cpi('../../../..')
+# cpi = get_cpi(@upstream_repo, 'v35.3', false)
 
 resource_pool = {
   'instance_type' => 'Standard_A1_v2',
