@@ -31,6 +31,6 @@ stemcell_id = stempCellName
 resource_pool = {
   "instance_type"=>"Standard_A1_v2"
 }
-networks = JSON('{"private":{"cloud_properties":{"subnet_name":"Bosh","virtual_network_name":"boshvnet-crp"},"default":["dns","gateway"],"dns":["168.63.129.16","8.8.8.8"],"gateway":"10.0.0.1","ip":"10.0.0.42","netmask":"255.255.255.0","type":"manual"}}')
+networks = JSON('{"private":{"cloud_properties":{"subnet_name":"andliu-performance-bosh-subnet","virtual_network_name":"andliu-performance-vnet"},"default":["dns","gateway"],"dns":["168.63.129.16","8.8.8.8"],"gateway":"10.0.0.1","ip":"10.0.0.42","netmask":"255.255.255.0","type":"manual"}}')
 instance_id = cpi.create_vm(agent_id, stemcell_id, resource_pool, networks)
 puts instance_id
