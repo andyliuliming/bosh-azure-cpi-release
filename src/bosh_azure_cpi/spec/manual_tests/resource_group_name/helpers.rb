@@ -24,6 +24,7 @@ cpi_config_file = File.expand_path('cpi.cfg', __dir__)
 
 def checkout_repo(repo, dir: '/tmp/cpi-test', branch: 'master', force_renew: false)
   name = "#{File.basename(repo)}-#{branch}"
+  # upstream_repo https://github.com/cloudfoundry-incubator/bosh-azure-cpi-release
   dest_dir = File.join(dir, name)
   return dest_dir if File.exist?(dest_dir) && !force_renew
 
