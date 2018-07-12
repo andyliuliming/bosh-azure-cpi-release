@@ -3,7 +3,7 @@
 cpi.storage_account_manager.get_storage_account_from_resource_pool(cpi.options['azure'], 'eastasia')
 
 stemcell_properties = {
-  "name" => "fake-name",
+  "name" => "fake-name2",
   "version" => "fake-version",
   "infrastructure" => "azure",
   "hypervisor" => "hyperv",
@@ -20,7 +20,7 @@ stemcell_properties = {
   # }
 }
 stempCellName = cpi.create_stemcell(
-  '~/Downloads/bosh-stemcell-2222.22-azure-hyperv-ubuntu-xenial-go_agent/image',
+  '/Users/andy/Downloads/bosh-stemcell-2222.23-azure-hyperv-ubuntu-xenial-go_agent/image',
   stemcell_properties)
 
 puts stempCellName
@@ -31,6 +31,17 @@ stemcell_id = stempCellName
 resource_pool = {
   "instance_type"=>"Standard_A1_v2"
 }
-networks = JSON('{"private":{"cloud_properties":{"subnet_name":"andliu-performance-bosh-subnet","virtual_network_name":"andliu-performance-vnet"},"default":["dns","gateway"],"dns":["168.63.129.16","8.8.8.8"],"gateway":"10.0.0.1","ip":"10.0.0.42","netmask":"255.255.255.0","type":"manual"}}')
-instance_id = cpi.create_vm(agent_id, stemcell_id, resource_pool, networks)
-puts instance_id
+i=0
+total_cost = 0
+times = 20
+while i < times
+    networks = JSON('{"private":{"cloud_properties":{"subnet_name":"andliu-performance-bosh-subnet","virtual_network_name":"andliu-performance-vnet"},"default":["dns","gateway"],"dns":["168.63.129.16","8.8.8.8"],"gateway":"10.0.0.1","ip":"10.0.0.42","netmask":"255.255.255.0","type":"manual"}}')
+    t1 = Time.now
+    instance_id = cpi.create_vm(agent_id, stemcell_id, resource_pool, networks)
+    total_cost = total_cost + (Time.now - t1)
+    cpi.delete_vm(instance_id)
+    i = i +1
+end
+
+per_item = total_cost/times
+puts per_item
