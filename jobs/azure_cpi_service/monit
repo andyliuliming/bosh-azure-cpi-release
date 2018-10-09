@@ -1,0 +1,5 @@
+check process azure_cpi_service
+  with pidfile /var/vcap/sys/run/azure_cpi_service/azure_cpi_service.pid
+  start program "/var/vcap/jobs/azure_cpi_service/bin/azure_cpi_service_ctl start"
+  stop program "/var/vcap/jobs/azure_cpi_service/bin/azure_cpi_service_ctl stop"
+  group vcap

@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+echo "Checking if azure_cpi_service is ready..."
+
+timeout 5m bash -c '
+  while ! nc -zv localhost <%= p('azure.cpi_service.port') %>; do
+    sleep 1
+  done
+'
+
+echo
+echo "azure_cpi_service is ready."

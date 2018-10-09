@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package bosh.cpi_service.models;
+
+// message StemcellContext {
+//     string api_version = 1;
+// }
+
+// message VMContext {
+//     StemcellContext stemcell = 1;
+// }
+
+// message CPIContext {
+//     string director_uuid = 1;
+//     string request_id = 2;
+//     VMContext vm = 3;
+// }
+
+message BoshContext {
+    string context_str = 1;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package bosh.cpi_service.models;
+import "context.proto";
+
+message ConfigureNetworksRequest {
+    BoshContext context = 1;
+    string vm_cid = 2;
+    string networks = 3; // json format string.
+}
+
+message ConfigureNetworksResponse{
+}

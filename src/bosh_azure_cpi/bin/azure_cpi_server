@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift File.expand_path('../lib/cloud/cpi_service/models', __dir__)
+
+require 'yaml'
+require 'ostruct'
+require 'bosh/cpi'
+require 'bundler'
+
+Bundler.setup(:default)
+
+require 'cloud/azure'
+
+require 'cloud/cpi_service/cpi_service_impl'
+
+def load_certs(cpi_service_config)
+  files = [
+    cpi_service_config.cpi_service_ca_path,
+    cpi_service_config.cpi_service_server_private_key,
+    cpi_service_config.cpi_service_server_certificate
+  ]
+  files.map { |f| File.open(f).read }
+end
+
+cloud_config = OpenStruct.new(logger: Bosh::AzureCloud::CPILogger.get_logger(STDOUT))
+
+Bosh::Clouds::Config.configure(cloud_config)
+
+# main starts an RpcServer that receives requests to cpi server.
+def main
+  cpi_config = YAML.load_file(ARGV.shift)
+  config = Bosh::AzureCloud::ConfigFactory.build(cpi_config['cloud']['properties'])
+
+  certs = load_certs(config.azure.cpi_service_config)
+
+  creds = GRPC::Core::ServerCredentials.new(
+    certs[0],
+    [{ private_key: certs[1], cert_chain: certs[2] }],
+    true
+  )
+
+  s = GRPC::RpcServer.new
+  s.add_http2_port("127.0.0.1:#{config.azure.cpi_service_config.port}", creds)
+  s.handle(Bosh::CpiService::CpiServerImpl)
+  s.run_till_terminated
+end
+
+main

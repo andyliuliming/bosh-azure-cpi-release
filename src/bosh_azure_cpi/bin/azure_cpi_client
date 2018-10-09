@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift File.expand_path('../lib/cloud/cpi_service/models', __dir__)
+
+require 'yaml'
+require 'ostruct'
+require 'bosh/cpi'
+require 'bundler'
+
+Bundler.setup(:default)
+
+require 'cloud/azure'
+
+require 'cloud/cpi_service/cpi_service_impl'
+
+def load_certs(cpi_service_config)
+  files = [
+    cpi_service_config.cpi_service_ca_path,
+    cpi_service_config.cpi_service_client_private_key,
+    cpi_service_config.cpi_service_client_certificate
+  ]
+  files.map { |f| File.open(f).read }
+end
+
+# main starts an RpcServer that receives requests to cpi server.
+def main
+  cpi_config = YAML.load_file(ARGV.shift)
+  config = Bosh::AzureCloud::ConfigFactory.build(cpi_config['cloud']['properties'])
+
+  certs = load_certs(config.azure.cpi_service_config)
+
+  creds = GRPC::Core::ChannelCredentials.new(certs[0], certs[1], certs[2])
+  p "localhost:#{config.azure.cpi_service_config.port}"
+
+  stub = Bosh::CpiService::Service::CPI::Stub.new(
+    "localhost:#{config.azure.cpi_service_config.port}",
+    creds
+  )
+  # any = Google::Protobuf::Any.new
+  # p any.methods
+  # any.pack(
+  #   {
+  #     heelo: "hhh",
+  #     context: {
+  #       ccs: "222",
+  #       wfw: {
+  #         fefef: "ssw"
+  #       }
+  #     }
+  #   }
+  # )
+  bosh_context = {'vm' => {'stemcell' => { 'api_version' => @stemcell_api_version }}}
+
+  vm_cid = stub.create_vm(Bosh::CpiService::Models::CreateVMRequest.new(
+      agent_id: "agentxx1",
+      context: {
+        context_str: JSON.dump(bosh_context)
+      }
+      # cloud_properties: "any"
+    ), 
+    {
+      metadata: {
+        k1: "v1",
+        k2: "v2"
+        }
+    }
+  ).vm_cid
+  p "vm created: #{vm_cid}"
+end
+
+main

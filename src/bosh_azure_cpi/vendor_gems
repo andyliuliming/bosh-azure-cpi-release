@@ -10,6 +10,9 @@ export BUNDLE_APP_CONFIG=$(mktemp -d $TMPDIR/bundler_config_XXXXXX)
 export BUNDLE_CACHE_PATH="vendor/package"
 export BUNDLE_WITHOUT="development:test"
 
-bundle package
+bundle config specific_platform true
+bundle lock --add-platform x86_64-linux
+bundle lock --remove-platform x86_64-darwin-17
+bundle package --all-platforms
 
 rm -rf $BUNDLE_APP_CONFIG

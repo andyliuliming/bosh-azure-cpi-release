@@ -19,6 +19,7 @@ require 'set'
 require 'securerandom'
 require 'socket'
 require 'tempfile'
+require 'thread'
 require 'time'
 require 'tmpdir'
 require 'yaml'
@@ -30,6 +31,7 @@ require 'yaml'
 require 'resolv-replace.rb'
 
 require 'digest/md5'
+require 'grpc'
 require 'net/http'
 require 'singleton'
 
@@ -69,7 +71,10 @@ require 'cloud/azure/models/managed_identity'
 require 'cloud/azure/models/vm_cloud_props'
 require 'cloud/azure/models/cloud_id_parser'
 require 'cloud/azure/models/vmss_config'
+require 'cloud/azure/batching/batch'
 require 'cloud/azure/cloud'
+require 'cloud/cpi_service/models/cpi_service_services_pb'
+require 'cloud/azure/cpi_adapter'
 require 'cloud/azure/restapi/rest_helpers'
 require 'cloud/azure/restapi/azure_client'
 require 'cloud/azure/restapi/azure_client_param_builder'
@@ -82,6 +87,8 @@ require 'cloud/azure/network/vip_network'
 require 'cloud/azure/network/network_configurator'
 require 'cloud/azure/vms/vm_manager_base'
 require 'cloud/azure/vms/vmss_manager'
+require 'cloud/azure/vms/vmss_batching_request'
+require 'cloud/azure/vms/vmss_batching_manager'
 require 'cloud/azure/vms/vm_manager_availability_set'
 require 'cloud/azure/vms/vm_manager_network'
 require 'cloud/azure/vms/vm_manager'
@@ -110,6 +117,6 @@ require 'cloud/azure/telemetry/wire_client'
 
 module Bosh
   module Clouds
-    Azure = Bosh::AzureCloud::Cloud
+    Azure = Bosh::AzureCloud::CPIAdapter
   end
 end

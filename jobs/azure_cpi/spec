@@ -6,6 +6,9 @@ templates:
   cpi.json.erb: config/cpi.json
   azure_stack_ca_cert.pem.erb: config/azure_stack_ca_cert.pem
   service_principal_certificate.pem.erb: config/service_principal_certificate.pem
+  cpi_service_ca.pem.erb: config/cpi_service_ca.pem
+  cpi_service_client_certificate.pem.erb: config/cpi_service_client_certificate.pem
+  cpi_service_client_private_key.erb: config/cpi_service_client_private_key
 
 packages:
 - ruby-2.4-r4
@@ -100,6 +103,18 @@ properties:
   azure.vmss.enabled:
     description: Whether the vmss will be used when creating vm.
     default: false
+  azure.cpi_service.enabled:
+    description: whether the cpi service is enabled
+    default: false
+  azure.cpi_service.port:
+    description: Port that the cpi service listens on
+    default: 3333
+  azure.cpi_service.tls.ca:
+    description: ca
+  azure.cpi_service.tls.client.certificate:
+    description: c
+  azure.cpi_service.tls.client.private_key:
+    description: p
 
   registry.username:
     description: User to access the Registry

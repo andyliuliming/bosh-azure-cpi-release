@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package bosh.cpi_service.models;
+import "context.proto";
+
+message CreateDiskRequest {
+    BoshContext context = 1;
+    int64 size = 2;
+    string cloud_properties = 3;
+    string vm_cid = 4;
+}
+
+message CreateDiskResponse{
+    string disk_cid = 1;
+}
+
+message DeleteDiskRequest {
+    BoshContext context = 1;
+    string disk_cid = 2;
+}
+
+message DeleteDiskResponse {
+}
+
+message ResizeDiskRequest {
+    BoshContext context = 1;
+    string disk_cid = 2;
+    int64 new_size = 3;
+}
+
+message ResizeDiskResponse {
+}
+
+message HasDiskRequest {
+    BoshContext context = 1;
+    string disk_cid = 2;
+}
+
+message HasDiskResponse {
+    bool exists = 1;
+}
+
+message AttachDiskRequest {
+    BoshContext context = 1;
+    string vm_cid = 2;
+    string disk_cid = 3;
+}
+
+message AttachDiskResponse {
+}
+
+message DetachDiskRequest {
+    BoshContext context = 1;
+    string vm_cid = 2;
+    string disk_cid = 3;
+}
+
+message DetachDiskResponse {
+}
+
+message SetDiskMetadataRequest{
+    BoshContext context = 1;
+    string disk_cid = 2;
+    map<string,string> metadata = 3;
+}
+
+message SetDiskMetadataResponse{
+}
+
+message GetDisksRequest{
+    BoshContext context = 1;
+    string vm_cid = 2;
+}
+
+message GetDisksResponse{
+    repeated string disk_cids = 1;
+}
+
+message SnapshotDiskRequest{
+    BoshContext context = 1;
+    string disk_cid = 2;
+    map<string,string> metadata = 3;
+}
+
+message SnapshotDiskResponse{
+    string snapshot_cid = 1;
+}
+
+message DeleteSnapshotRequest{
+    BoshContext context = 1;
+    string snapshot_cid = 2;
+}
+
+message DeleteSnapshotResponse{
+}

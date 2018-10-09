@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift File.expand_path('../lib/cloud/cpi_service/models', __dir__)
 
 require 'simplecov'
 SimpleCov.start do

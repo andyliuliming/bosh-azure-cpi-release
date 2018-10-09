@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift File.expand_path('../lib/cloud/cpi_service/models', __dir__)
 
 require 'yaml'
 require 'ostruct'
@@ -11,6 +12,7 @@ require 'bundler'
 Bundler.setup(:default)
 require 'cloud/azure'
 
+# ARGV.shift is the $BOSH_JOBS_DIR/azure_cpi/config/cpi.json
 cpi_config = YAML.load_file(ARGV.shift)
 
 std_err_logger = Bosh::AzureCloud::CPILogger.instance.get_logger(STDERR)
@@ -22,7 +24,7 @@ Bosh::Clouds::Config.configure(cloud_config)
 
 cpi_log = StringIO.new
 
-cpi_lambda = lambda do |context|
+cpi_lambda = lambda do |context, cpi_api_version = nil|
   raise 'Could not find cloud properties in the configuration' unless cpi_config.key?('cloud') && cpi_config['cloud'].key?('properties')
 
   cloud_properties = cpi_config['cloud']['properties']
@@ -31,7 +33,7 @@ cpi_lambda = lambda do |context|
   cloud_properties['azure'].merge!(context)
 
   Bosh::AzureCloud::Config.instance.update(cloud_properties)
-  Bosh::Clouds::Azure.new
+  Bosh::Clouds::Azure.new(context)
 end
 
 # Redefine $stdout because azure libraries use print for info logging

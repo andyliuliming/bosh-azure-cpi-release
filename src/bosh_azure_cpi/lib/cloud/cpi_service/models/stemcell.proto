@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package bosh.cpi_service.models;
+import "context.proto";
+
+message CreateStemcellRequest {
+    BoshContext context = 1;
+    string image_path = 2;
+    string cloud_properties = 3;
+}
+
+message CreateStemcellResponse{
+    string stemcell_cid = 1;
+}
+
+message DeleteStemcellRequest{
+    BoshContext context = 1;
+    string stemcell_cid = 2;
+}
+
+message DeleteStemcellResponse{
+}

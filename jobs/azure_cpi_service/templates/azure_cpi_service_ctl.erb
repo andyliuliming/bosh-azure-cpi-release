@@ -1,0 +1,51 @@
+#!/bin/bash
+
+BOSH_PACKAGES_DIR=${BOSH_PACKAGES_DIR:-/var/vcap/packages}
+BOSH_JOBS_DIR=${BOSH_JOBS_DIR:-/var/vcap/jobs}
+BOSH_DATA_DIR=${BOSH_DATA_DIR:-/var/vcap/data}
+
+RUN_DIR=/var/vcap/sys/run/azure_cpi_service
+LOG_DIR=/var/vcap/sys/log/azure_cpi_service
+PIDFILE=$RUN_DIR/azure_cpi_service.pid
+RUNAS=vcap
+
+PATH=$PATH:$BOSH_JOBS_DIR/azure_cpi_service/bin
+
+source $BOSH_JOBS_DIR/azure_cpi_service/env
+
+export TMPDIR=$BOSH_DATA_DIR/azure_cpi_service/tmp
+
+export RUBY_THREAD_VM_STACK_SIZE=16777216
+export RUBY_THREAD_MACHINE_STACK_SIZE=16777216
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $DIR/ps_utils.sh
+
+case $1 in
+
+  start)
+    mkdir -p $RUN_DIR $LOG_DIR $TMPDIR
+    chown -R $RUNAS:$RUNAS $RUN_DIR $LOG_DIR $TMPDIR
+
+    echo $$ > $PIDFILE
+
+    exec chpst -u $RUNAS:$RUNAS \
+      $BOSH_PACKAGES_DIR/bosh_azure_cpi/bin/azure_cpi_server \
+      $BOSH_JOBS_DIR/azure_cpi_service/config/cpi.json \
+      >>$LOG_DIR/azure_cpi_service.stdout.log \
+      2>>$LOG_DIR/azure_cpi_service.stderr.log
+    ;;
+
+  stop)
+    PID=$(head -1 $PIDFILE)
+    kill_process $PID # prevent the parent from fork()ing new children
+    for CHILD in $(list_child_processes $INDEX); do
+      kill_process $CHILD
+    done
+    rm -f $PIDFILE
+    ;;
+
+  *)
+  echo "Usage: azure_cpi_service_ctl {start|stop}" ;;
+esac
+exit 0

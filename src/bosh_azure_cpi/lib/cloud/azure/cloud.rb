@@ -76,6 +76,8 @@ module Bosh::AzureCloud
           end
         end
       end
+    rescue StandardError => e
+      raise "FFFFFF"
     end
 
     ##

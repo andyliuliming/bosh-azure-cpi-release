@@ -1,0 +1,17 @@
+{
+    "cloud": {
+        "properties": {
+            "azure": {
+                "cpi_service": {
+                    "enabled": true,
+                    "port": 3333,
+                    "cpi_service_ca_path": "./spec/test_materials/cpi_service_ca",
+                    "cpi_service_client_certificate": "./spec/test_materials/cpi_service_client_certificate",
+                    "cpi_service_client_private_key": "./spec/test_materials/cpi_service_client_private_key",
+                    "cpi_service_server_certificate": "./spec/test_materials//cpi_service_server_certificate",
+                    "cpi_service_server_private_key": "./spec/test_materials//cpi_service_server_private_key"
+                }
+            }
+        }
+    }
+}

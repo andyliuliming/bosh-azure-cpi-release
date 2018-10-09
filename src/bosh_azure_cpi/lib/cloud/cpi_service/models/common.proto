@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package bosh.cpi_service.models;
+import "context.proto";
+message InfoRequest {
+    BoshContext context = 1;
+}
+
+message InfoResponse {
+    string stemcell_formats = 1;
+}
+
+message CurrentVMIdRequest{
+    BoshContext context = 1;
+}
+
+message CurrentVMIdResponse{
+    string vm_cid = 1;
+}

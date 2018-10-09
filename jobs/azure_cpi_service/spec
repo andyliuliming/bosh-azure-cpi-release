@@ -1,0 +1,194 @@
+---
+name: azure_cpi_service
+
+templates:
+  pre-start.erb: bin/pre-start
+  post-start.erb: bin/post-start
+  cpi.json.erb: config/cpi.json
+  azure_stack_ca_cert.pem.erb: config/azure_stack_ca_cert.pem
+  service_principal_certificate.pem.erb: config/service_principal_certificate.pem
+  azure_cpi_service_ctl.erb: bin/azure_cpi_service_ctl
+  ps_utils.sh: bin/ps_utils.sh
+  env.erb: env
+  cpi_service_ca.pem.erb: config/cpi_service_ca.pem
+  cpi_service_server_certificate.pem.erb: config/cpi_service_server_certificate.pem
+  cpi_service_server_private_key.erb: config/cpi_service_server_private_key
+
+packages:
+- ruby-2.4-r4
+- bosh_azure_cpi
+
+properties:
+  azure.environment:
+    description: The environment for Azure Management Service. AzureCloud, AzureChinaCloud, AzureUSGovernment, AzureGermanCloud or AzureStack
+    default: AzureCloud
+  azure.location:
+    description: Azure region name
+    example: eastus
+  azure.subscription_id:
+    description: Azure Subscription Id
+  azure.resource_group_name:
+    description: Resource group name to use when spinning up new vms
+  azure.storage_account_name:
+    description: Azure storage account name. This property is required when use_managed_disks is false or upgrading from an existing deployment whose use_managed_disks is false.
+  azure.tenant_id:
+    description: The tenant id for your service principal
+  azure.client_id:
+    description: The client id for your service principal
+  azure.client_secret:
+    description: The client secret for your service principal
+  azure.certificate:
+    description: The certificate for your service principal
+    example:
+      -----BEGIN PRIVATE KEY-----
+      MII...
+      -----END PRIVATE KEY-----
+      -----BEGIN CERTIFICATE-----
+      MII...
+      -----END CERTIFICATE-----
+  azure.ssh_user:
+    description: Default ssh user to use when spinning up new vms
+    default: vcap
+  azure.ssh_public_key:
+    description: The content of the SSH public key to use when spinning up new vms
+  azure.parallel_upload_thread_num:
+    description: The number of threads to upload stemcells in parallel
+    default: 16
+  azure.default_security_group:
+    description: The name of the default security group that will be applied to all created VMs
+  azure.debug_mode:
+    description: Enable debug mode to log all raw HTTP requests/responses
+    default: false
+  azure.use_managed_disks:
+    description: Enable managed disks
+    default: false
+  azure.pip_idle_timeout_in_minutes:
+    description: Idle timeouts in minutes for dynamic public IPs
+    default: 4
+  azure.keep_failed_vms:
+    description: Enable keeping the VM which failed in provisioning for troubleshooting
+    default: false
+  azure.enable_telemetry:
+    description: Enable telemetry on CPI calls
+    default: false
+  azure.enable_vm_boot_diagnostics:
+    description: Enable VM boot diagnostics
+    default: false
+  azure.managed_service_identity.enabled:
+    description: "Use managed service identity (MSI) to get tokens"
+    default: false
+  azure.azure_stack.domain:
+    description: The domain for your AzureStack deployment
+    default: local.azurestack.external
+  azure.azure_stack.authentication:
+    description: The authentication type for your AzureStack deployment. AzureAD, AzureChinaCloudAD or ADFS
+    default: AzureAD
+  azure.azure_stack.resource:
+    description: The token resource for your AzureStack deployment
+  azure.azure_stack.endpoint_prefix:
+    description: The endpoint prefix for your AzureStack deployment
+    default: management
+  azure.azure_stack.ca_cert:
+    description: All required custom CA certificates for AzureStack
+    example:
+      -----BEGIN CERTIFICATE-----
+      MII...
+      -----END CERTIFICATE-----
+  azure.isv_tracking_guid:
+    description: ISV tracking GUID for usage association
+  azure.config_disk.enabled:
+    description: will use one config disk to pass the meta data into the vm, only works in Linux stemcell now.
+    default: false
+  azure.vmss.enabled:
+    description: Whether the vmss will be used when creating vm. The config_disk.enabled should be true to use this.
+    default: false
+  azure.cpi_service.enabled:
+    description: whether the cpi service is enabled
+    default: false
+  azure.cpi_service.port:
+    description: Port that the cpi service listens on
+    default: 3333
+  azure.cpi_service.tls.ca:
+    description: ca
+  azure.cpi_service.tls.server.certificate:
+    description: c
+  azure.cpi_service.tls.server.private_key:
+    description: p
+
+  registry.username:
+    description: User to access the Registry
+  registry.password:
+    description: Password to access the Registry
+  registry.host:
+    description: Address of the Registry to connect to
+  registry.port:
+    description: Port of the Registry to connect to
+    default: 25777
+  registry.endpoint:
+    description: Full URL for the registry endpoint that may include basic auth credentials
+    example: http://admin:admin-password@some-ip:port
+
+  ntp:
+    description: List of ntp server IPs. pool.ntp.org attempts to return IPs closest to your location, but you can still specify if needed.
+    default: [0.pool.ntp.org, 1.pool.ntp.org]
+
+  blobstore.provider:
+    description: Provider of the blobstore used by director and agent (dav|simple|s3)
+    default: 'dav'
+  blobstore.bucket_name:
+    description: AWS S3 Bucket used by s3 blobstore plugin
+  blobstore.access_key_id:
+    description: AWS access_key_id used by s3 blobstore plugin
+  blobstore.secret_access_key:
+    description: AWS secret_access_key used by s3 blobstore plugin
+  blobstore.use_ssl:
+    description: Whether the simple blobstore plugin should use SSL to connect to the blobstore server
+    default: true
+  blobstore.s3_port:
+    description: Port of blobstore server used by s3 blobstore plugin
+    default: 443
+  blobstore.host:
+    description: Host of blobstore server used by simple blobstore plugin
+  blobstore.s3_force_path_style:
+    description: Whether s3 blobstore plugin will always use path style for bucket access
+    default: false
+  blobstore.path:
+    description: local blobstore path
+  blobstore.address:
+    description: Address of blobstore server used by simple blobstore plugin
+  blobstore.port:
+    description: Port of blobstore server used by simple blobstore plugin
+    default: 25250
+  blobstore.agent.user:
+    description: Username agent uses to connect to blobstore used by simple blobstore plugin
+  blobstore.agent.password:
+    description: Password agent uses to connect to blobstore used by simple blobstore plugin
+
+  agent.blobstore.secret_access_key:
+    description: AWS secret_access_key for agent used by s3 blobstore plugin
+  agent.mbus:
+    description: Agent mbus
+  agent.nats.address:
+    description: Address of the nats server
+  agent.blobstore.address:
+    description: Address for agent to connect to blobstore server used by simple blobstore plugin
+  agent.blobstore.access_key_id:
+    description: AWS access_key_id for agent used by s3 blobstore plugin
+
+  nats.user:
+    description: Username to connect to nats with
+    default: nats
+  nats.password:
+    description: Password to connect to nats with
+  nats.address:
+    description: Address of the nats server
+  nats.port:
+    description: Port that the nats server listens on
+    default: 4222
+
+  env.http_proxy:
+    description: Http proxy to connect to cloud API's
+  env.https_proxy:
+    description: Https proxy to connect to cloud API's
+  env.no_proxy:
+    description: No proxy environment variable

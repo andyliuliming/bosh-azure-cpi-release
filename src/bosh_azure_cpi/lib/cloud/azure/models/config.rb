@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 module Bosh::AzureCloud
+  class CPIServiceConfig
+    attr_reader :enabled, :port
+    attr_reader :cpi_service_ca_path
+    attr_reader :cpi_service_server_certificate
+    attr_reader :cpi_service_server_private_key
+    attr_reader :cpi_service_client_certificate
+    attr_reader :cpi_service_client_private_key
+    def initialize(cpi_service_config_hash)
+      @enabled = cpi_service_config_hash['enabled']
+      @port = cpi_service_config_hash['port']
+      @cpi_service_ca_path = cpi_service_config_hash['cpi_service_ca_path']
+      @cpi_service_server_certificate = cpi_service_config_hash['cpi_service_server_certificate']
+      @cpi_service_server_private_key = cpi_service_config_hash['cpi_service_server_private_key']
+      @cpi_service_client_certificate = cpi_service_config_hash['cpi_service_client_certificate']
+      @cpi_service_client_private_key = cpi_service_config_hash['cpi_service_client_private_key']
+    end
+  end
+
   class LoadBalancerConfig
     attr_reader :name, :resource_group_name
     def initialize(resource_group_name, name)
@@ -47,6 +65,7 @@ module Bosh::AzureCloud
 
   class AzureConfig
     include Helpers
+    attr_reader :cpi_service_config
     attr_reader :environment, :subscription_id, :location, :resource_group_name
     attr_reader :azure_stack
     attr_reader :credentials_source, :tenant_id, :client_id, :client_secret, :default_managed_identity
@@ -100,6 +119,8 @@ module Bosh::AzureCloud
       @ssh_user = azure_config_hash['ssh_user']
       @ssh_public_key = azure_config_hash['ssh_public_key']
       @vmss = VMSS.new(azure_config_hash.fetch('vmss', 'enabled' => false))
+
+      @cpi_service_config = CPIServiceConfig.new(azure_config_hash.fetch('cpi_service', 'enabled' => false))
     end
 
     def managed_identity_enabled?

@@ -110,6 +110,21 @@
     }
   end
 
+  if p('azure.cpi_service.enabled')
+    params['cloud']['properties']['azure']['cpi_service'] = {
+      "enabled" => true,
+      "port" => p('azure.cpi_service.port'),
+      "cpi_service_ca_path" => "/var/vcap/jobs/azure_cpi/config/cpi_service_ca.pem",
+      "cpi_service_client_certificate" => "/var/vcap/jobs/azure_cpi/config/cpi_service_client_certificate.pem",
+      "cpi_service_client_private_key" => "/var/vcap/jobs/azure_cpi/config/cpi_service_client_private_key"
+    }
+    #
+  else
+    params['cloud']['properties']['azure']['cpi_service'] = {
+      "enabled" => false
+    }
+  end
+
   if_p('registry.endpoint') do |endpoint|
     params['cloud']['properties']['registry']['endpoint'] = endpoint
   end.else do
@@ -153,6 +168,6 @@
   end.else_if_p('nats') do
     params['cloud']['properties']['agent']['mbus'] = "nats://#{p('nats.user')}:#{p('nats.password')}@#{p(['agent.nats.address', 'nats.address'])}:#{p('nats.port')}"
   end
-  
+
   JSON.pretty_generate(params)
 %>

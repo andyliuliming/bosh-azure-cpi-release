@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package bosh.cpi_service.service;
+
+import "common.proto";
+import "disk.proto";
+import "network.proto";
+import "stemcell.proto";
+import "vm.proto";
+
+// The cpi service definition.
+service CPI {
+    rpc Info(bosh.cpi_service.models.InfoRequest) returns (bosh.cpi_service.models.InfoResponse) {}
+    // Create a stemcell
+    rpc CreateStemcell(bosh.cpi_service.models.CreateStemcellRequest) returns (bosh.cpi_service.models.CreateStemcellResponse) {}
+    // Create a VM
+    rpc CreateVM (bosh.cpi_service.models.CreateVMRequest) returns (bosh.cpi_service.models.CreateVMResponse) {}
+
+    rpc DeleteVM (bosh.cpi_service.models.DeleteVMRequest) returns (bosh.cpi_service.models.DeleteVMResponse) {}
+
+    rpc HasVM (bosh.cpi_service.models.HasVMRequest) returns (bosh.cpi_service.models.HasVMResponse) {}
+
+    rpc RebootVM (bosh.cpi_service.models.RebootVMRequest) returns (bosh.cpi_service.models.RebootVMResponse) {}
+
+    rpc SetVMMetadata (bosh.cpi_service.models.SetVMMetadataRequest) returns (bosh.cpi_service.models.SetVMMetadataResponse) {}
+
+    rpc CreateDisk(bosh.cpi_service.models.CreateDiskRequest) returns (bosh.cpi_service.models.CreateDiskResponse) {}
+
+    rpc DeleteDisk(bosh.cpi_service.models.DeleteDiskRequest) returns (bosh.cpi_service.models.DeleteDiskResponse) {}
+
+    rpc ResizeDisk(bosh.cpi_service.models.ResizeDiskRequest) returns (bosh.cpi_service.models.ResizeDiskResponse) {}
+
+    rpc HasDisk(bosh.cpi_service.models.HasDiskRequest) returns (bosh.cpi_service.models.HasDiskResponse) {}
+
+    rpc AttachDisk(bosh.cpi_service.models.AttachDiskRequest) returns (bosh.cpi_service.models.AttachDiskResponse) {}
+
+    rpc DetachDisk(bosh.cpi_service.models.DetachDiskRequest) returns (bosh.cpi_service.models.DetachDiskResponse) {}
+
+    rpc SetDiskMetadata(bosh.cpi_service.models.SetDiskMetadataRequest) returns (bosh.cpi_service.models.SetDiskMetadataResponse) {}
+
+    rpc GetDisks(bosh.cpi_service.models.GetDisksRequest) returns (bosh.cpi_service.models.GetDisksResponse) {}
+
+    rpc SnapshotDisk(bosh.cpi_service.models.SnapshotDiskRequest) returns (bosh.cpi_service.models.SnapshotDiskResponse) {}
+
+    rpc DeleteSnapshot(bosh.cpi_service.models.DeleteSnapshotRequest) returns (bosh.cpi_service.models.DeleteSnapshotResponse) {}
+ 
+    rpc ConfigureNetworks(bosh.cpi_service.models.ConfigureNetworksRequest) returns (bosh.cpi_service.models.ConfigureNetworksResponse) {}
+ 
+    rpc CurrentVMId(bosh.cpi_service.models.CurrentVMIdRequest) returns (bosh.cpi_service.models.CurrentVMIdResponse) {}
+}

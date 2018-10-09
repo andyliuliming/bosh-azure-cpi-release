@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package bosh.cpi_service.models;
+import "context.proto";
+
+message CreateVMRequest{
+    BoshContext context = 1;
+    string agent_id = 2;
+    string stemcell_cid = 3;
+    repeated string disk_cids = 4;
+    string cloud_properties = 5;
+    string networks = 6;
+    string environment = 7;
+}
+
+message CreateVMResponse{
+    string vm_cid = 1;
+}
+
+message HasVMRequest {
+    BoshContext context = 1;
+    string vm_cid = 2;
+}
+
+message HasVMResponse{
+    bool exists = 1;
+}
+
+message RebootVMRequest {
+    BoshContext context = 1;
+    string vm_cid = 2;
+}
+
+message RebootVMResponse{
+}
+
+message SetVMMetadataRequest{
+    BoshContext context = 1;
+    string vm_cid = 2;
+    map<string,string> metadata = 3;
+}
+
+message SetVMMetadataResponse{
+}
+
+message DeleteVMRequest{
+    BoshContext context = 1;
+    string vm_cid = 2;
+}
+
+message DeleteVMResponse{
+}
